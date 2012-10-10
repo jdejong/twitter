@@ -27,6 +27,17 @@ module Twitter
     DEFAULT_TWEETS_PER_REQUEST = 20
     MAX_USERS_PER_REQUEST = 100
     MAX_TWEETS_PER_REQUEST = 200
+    
+    def rate_limit_information(options={})
+      response = get('/1.1/application/rate_limit_status.json')[:body]
+      response[:resources].keys.each do |key|
+        val = response[:resources][key.to_sym].values[0]
+        lim = Twitter::Limit.new
+        lim.limit = val[:limit]
+        lim.remaining = val[:remaining]
+        lim.reset = val[:reset]
+      end
+    end
 
     # Returns the requesting user if authentication was successful, otherwise raises {Twitter::Error::Unauthorized}
     #
