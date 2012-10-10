@@ -29,7 +29,13 @@ module Twitter
     MAX_USERS_PER_REQUEST = 100
     MAX_TWEETS_PER_REQUEST = 200
     
-    def rate_limit_information(options={})
+    
+    #Returns the requesting users Rate Limits
+    #
+    # @see https://dev.twitter.com/docs/api/1.1/get/application/rate_limit_status
+    # @rate_limited Yes
+    # @authentication_required Requires user context
+    def rate_limit_status(options={})
       object_from_response(Twitter::RateLimitCollection, :get, '/1.1/application/rate_limit_status.json', options)
     end
 
