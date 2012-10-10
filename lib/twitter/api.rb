@@ -20,6 +20,7 @@ require 'twitter/suggestion'
 require 'twitter/trend'
 require 'twitter/tweet'
 require 'twitter/user'
+require 'twitter/rate_limit_collection'
 
 module Twitter
   module API
@@ -29,14 +30,7 @@ module Twitter
     MAX_TWEETS_PER_REQUEST = 200
     
     def rate_limit_information(options={})
-      response = get('/1.1/application/rate_limit_status.json')[:body]
-      response[:resources].keys.each do |key|
-        val = response[:resources][key.to_sym].values[0]
-        lim = Twitter::Limit.new
-        lim.limit = val[:limit]
-        lim.remaining = val[:remaining]
-        lim.reset = val[:reset]
-      end
+      object_from_response(Twitter::RateLimitCollection, :get, '/1.1/application/rate_limit_status.json', options)
     end
 
     # Returns the requesting user if authentication was successful, otherwise raises {Twitter::Error::Unauthorized}
